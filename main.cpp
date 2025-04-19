@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 
 // Vienkrypčio sąrašo mazgo struktūra
 struct Node {
@@ -22,6 +23,24 @@ struct TreeNode {
     TreeNode* right;
     TreeNode(char val) : data(val), left(nullptr), right(nullptr) {}
 };
+
+// Funkcija vienkrypčio sąrašo kūrimui iš įvestos eilutės
+Node* createListFromInput(const std::string& input) {
+    Node* head = nullptr;
+    Node* tail = nullptr;
+
+    for (char c : input) {
+        Node* newNode = new Node(c);
+        if (head == nullptr) {
+            head = tail = newNode;
+        } else {
+            tail->next = newNode;
+            tail = newNode;
+        }
+    }
+
+    return head;
+}
 
 // 1. Simbolių sąrašo apdorojimo funkcija
 Node* createNewList(Node* head, int n) {
@@ -159,12 +178,12 @@ void treeToList(TreeNode* root, Node*& head) {
 }
 
 // Dvikrypčio sąrašo funkcijos
-DoubleNode* createDoubleList(const char* text) {
+DoubleNode* createDoubleList(const std::string& text) {
     DoubleNode* head = nullptr;
     DoubleNode* tail = nullptr;
 
-    for (int i = 0; text[i] != '\0'; i++) {
-        DoubleNode* newNode = new DoubleNode(text[i]);
+    for (char c : text) {
+        DoubleNode* newNode = new DoubleNode(c);
         if (head == nullptr) {
             head = tail = newNode;
         } else {
@@ -233,28 +252,30 @@ void printList(Node* head) {
 }
 
 int main() {
-    // 1. Simbolių sąrašo testas
-    Node* head = new Node('H');
-    head->next = new Node('e');
-    head->next->next = new Node('l');
-    head->next->next->next = new Node(' ');
-    head->next->next->next->next = new Node('W');
-    head->next->next->next->next->next = new Node('o');
+    // 1. Simbolių sąrašo įvestis
+    std::string input;
+    std::cout << "Iveskite simboliu seka su tarpu (pvz., Hel Wo): ";
+    std::getline(std::cin, input);
 
+    Node* head = createListFromInput(input);
     std::cout << "Originalus sarasas: ";
     printList(head);
 
-    Node* newList = createNewList(head, 6);
+    Node* newList = createNewList(head, input.length());
     std::cout << "Naujas sarasas: ";
     printList(newList);
 
-    // 2. Dvejetainio medžio testas
+    // 2. Dvejetainio medžio įvestis
     TreeNode* root = nullptr;
-    root = insertTree(root, 'H');
-    root = insertTree(root, 'E');
-    root = insertTree(root, 'L');
-    root = insertTree(root, 'W');
-    root = insertTree(root, 'O');
+    std::string treeInput;
+    std::cout << "Iveskite simbolius medzio mazgams (pvz., HELWO, arba tuscia iseiti): ";
+    std::getline(std::cin, treeInput);
+
+    for (char c : treeInput) {
+        if (c != ' ') {
+            root = insertTree(root, c);
+        }
+    }
 
     std::cout << "Medzio elementai: ";
     printTree(root);
@@ -266,8 +287,11 @@ int main() {
     std::cout << "Vienkryptis sarasas is medzio: ";
     printList(singleList);
 
-    // 3. Dvikrypčio sąrašo testas
-    const char* text = "Apple and Banana are fruits.";
+    // 3. Dvikrypčio sąrašo įvestis
+    std::string text;
+    std::cout << "Iveskite teksta dvikrypciam sarasui (pvz., Apple and Banana): ";
+    std::getline(std::cin, text);
+
     DoubleNode* doubleList = createDoubleList(text);
     std::cout << "Pradinis dvikryptis sarasas: ";
     printDoubleList(doubleList);
